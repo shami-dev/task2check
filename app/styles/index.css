@@ -1,0 +1,16 @@
+h1 {
+  text-align: center;
+}
+
+.form-box {
+  display: flex;
+  column-gap: 5%;
+}
+
+form div {
+  width: 100%;
+}
+
+textarea {
+  font-family: inherit;
+}
