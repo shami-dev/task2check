@@ -1,3 +1,16 @@
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Section,
+  Strong,
+  Text,
+  TextArea,
+  Link as LinkRadix,
+  Container,
+} from "@radix-ui/themes";
+import * as Label from "@radix-ui/react-label";
 import type {
   MetaFunction,
   LinksFunction,
@@ -30,38 +43,88 @@ export default function Index() {
   return (
     <>
       <main>
-        <section>
-          <h1>Welcome to the IELTS Writing Part-2 AI Checker!</h1>
-          <Form method="post">
-            <div className="form-box">
-              <div>
-                <p>
-                  <strong>
-                    You should spend about 40 minutes on this task Write at
-                    least 250 words
-                  </strong>
-                </p>
-                <label htmlFor="task">Insert your task here:</label>
-                <textarea name="task" id="tasks" cols={50} rows={6}></textarea>
-              </div>
-              <div>
-                <textarea name="answer" cols={50} rows={15}></textarea>
-              </div>
-            </div>
-            <button type="submit">Get AI report</button>
-          </Form>
-        </section>
+        <Section px="4">
+          <Heading
+            as="h1"
+            align="center"
+            size="7"
+            weight="bold"
+            wrap="pretty"
+            color="blue"
+            mb="8"
+          >
+            Welcome to the IELTS Writing Part-2 AI Checker!
+          </Heading>
+          <Container maxWidth="1024px">
+            <Form method="post">
+              <Flex
+                justify="between"
+                direction={{ initial: "column", sm: "row" }}
+                gap="6"
+              >
+                <Box maxWidth="700px">
+                  <Text as="p" mb="4">
+                    <Strong>
+                      You should spend about 40 minutes on this task Write at
+                      least 250 words
+                    </Strong>
+                  </Text>
+                  <Label.Root htmlFor="task">Insert your task here:</Label.Root>
+                  <TextArea
+                    id="task"
+                    name="task"
+                    mt="2"
+                    radius="none"
+                    cols={50}
+                    rows={6}
+                    resize="vertical"
+                    spellCheck="false"
+                  />
+                </Box>
+                <Box maxWidth="700px">
+                  <Label.Root htmlFor="answer">
+                    Insert your response here:
+                  </Label.Root>
+                  <TextArea
+                    id="answer"
+                    name="answer"
+                    mt="2"
+                    radius="none"
+                    cols={50}
+                    rows={15}
+                    resize="vertical"
+                    spellCheck="false"
+                  />
+                  <Flex justify="end">
+                    <Button mt="4" variant="solid">
+                      Get AI report
+                    </Button>
+                  </Flex>
+                </Box>
+              </Flex>
+            </Form>
+          </Container>
+        </Section>
       </main>
-      <footer>
-        <Link to={"/about"}>About the project</Link>
-        <p>
-          <a href="mailto:shamil@shami.dev">Send feedback</a>
-        </p>
-        <p>
-          Copyright (c) {new Date().getFullYear()}{" "}
-          <a href="https://www.shami.dev/">Shamil</a>
-        </p>
-      </footer>
+      <Section mx="4">
+        <footer>
+          <Container size="2">
+            <Flex justify="center" align="center" gap="8">
+              <Link to="/about" className="link">
+                About the project
+              </Link>
+              <p>
+                <LinkRadix href="mailto:shamil@shami.dev">
+                  Send feedback
+                </LinkRadix>
+              </p>
+            </Flex>
+            <Text as="p" align="center">
+              Copyright © {new Date().getFullYear()} Shamil
+            </Text>
+          </Container>
+        </footer>
+      </Section>
     </>
   );
 }

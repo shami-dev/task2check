@@ -1,16 +1,21 @@
-h1 {
-  text-align: center;
+form {
+  background-color: var(--gray-2);
+  padding: 30px;
 }
 
-.form-box {
-  display: flex;
-  column-gap: 5%;
+#task,
+#answer {
+  padding: 0;
 }
 
-form div {
-  width: 100%;
+.link {
+  color: var(--accent-a11);
+  text-decoration: none;
 }
 
-textarea {
-  font-family: inherit;
+.link:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--gray-a6);
+  text-decoration-thickness: min(2px, max(1px, 0.05em));
+  text-underline-offset: calc(0.025em + 2px);
 }
