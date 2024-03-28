@@ -7,6 +7,7 @@ import {
 } from "@remix-run/react";
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
+import { Analytics } from "@vercel/analytics/react";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -20,6 +21,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <Theme accentColor="blue" scaling="100%">
           {children}
+          <Analytics />
         </Theme>
         <ScrollRestoration />
         <Scripts />
