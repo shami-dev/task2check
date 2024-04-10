@@ -16,8 +16,9 @@ import type {
   LinksFunction,
   ActionFunctionArgs,
 } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
+import { Form, Link, useNavigation } from "@remix-run/react";
 import styles from "~/styles/index.css?url";
+import { useEffect, useRef } from "react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -40,6 +41,14 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Index() {
+  const navigation = useNavigation();
+  const formRef = useRef<HTMLFormElement>(null);
+  const isAdding = navigation.state === "submitting";
+
+  useEffect(() => {
+    if (!isAdding) formRef.current!.reset();
+  }, [isAdding]);
+
   return (
     <>
       <main>
@@ -56,7 +65,7 @@ export default function Index() {
             Welcome to the IELTS Writing Part-2 AI Checker!
           </Heading>
           <Container maxWidth="1024px">
-            <Form method="post">
+            <Form ref={formRef} method="post">
               <Flex
                 justify="between"
                 direction={{ initial: "column", sm: "row" }}
