@@ -17,16 +17,11 @@ import type {
   LinksFunction,
   ActionFunctionArgs,
 } from "@remix-run/node";
-import {
-  Form,
-  Link,
-  json,
-  useActionData,
-  useNavigation,
-} from "@remix-run/react";
+import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import styles from "~/styles/index.css?url";
 import { useEffect, useRef } from "react";
 import OpenAI from "openai";
+import { typedjson } from "remix-typedjson";
 
 export const meta: MetaFunction = () => {
   return [
@@ -40,33 +35,62 @@ export const meta: MetaFunction = () => {
 
 export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const task = String(formData.get("task"));
-  const answer = String(formData.get("answer"));
+  try {
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
-  const completion = await openai.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content:
-          "You are an experienced IELTS coach. I will give you an IELTS Writing Part 2 task and an essay. You aim to write feedback. Follow the next structure: task response; coherence and cohesion; lexical resource; grammatical range and accuracy. Keep it under 600 words and show the approximate range of a band score.",
-      },
-      {
-        role: "user",
-        content: `Task: ${task}, Response: ${answer}`,
-      },
-    ],
-    model: "gpt-3.5-turbo",
-  });
+    const formData = await request.formData();
+    const task = String(formData.get("task"));
+    const answer = String(formData.get("answer"));
 
-  const result = completion.choices[0].message.content;
+    const validationErrors: {
+      taskFieldError?: string;
+      answerFieldError?: string;
+      formError?: string;
+    } = {};
 
-  return json({ task, answer, result });
+    if (typeof task !== "string" || typeof answer !== "string") {
+      validationErrors.formError =
+        "Form not submitted correctly. Please check your inputs.";
+    }
+
+    if (!task || task.length === 0) {
+      validationErrors.taskFieldError =
+        "The task field cannot be empty. Please, write or paste your task.";
+    }
+
+    if (!answer || answer.length === 0) {
+      validationErrors.answerFieldError =
+        "The answer field cannot be empty. Please write or paste your essay.";
+    }
+
+    if (Object.keys(validationErrors).some(Boolean)) {
+      return typedjson({ validationErrors }, { status: 400 });
+    }
+
+    const completion = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are an experienced IELTS coach. I will give you an IELTS Writing Part 2 task and an essay. You aim to write feedback. Follow the next structure: task response; coherence and cohesion; lexical resource; grammatical range and accuracy. Keep it under 600 words and show the approximate range of a band score.",
+        },
+        {
+          role: "user",
+          content: `Task: ${task}, Response: ${answer}`,
+        },
+      ],
+      model: "gpt-3.5-turbo",
+    });
+
+    const result = completion.choices[0].message.content;
+
+    return typedjson({ task, answer, result });
+  } catch (error) {
+    return { error: "Something went wrong! Please try again." };
+  }
 }
 
 export default function Index() {
@@ -79,7 +103,6 @@ export default function Index() {
   }, [isAdding]);
 
   const data = useActionData<typeof action>();
-  console.log(data);
 
   return (
     <>
@@ -111,8 +134,15 @@ export default function Index() {
                     </Strong>
                   </Text>
                   <Label.Root htmlFor="task">
-                    Insert your task here: *
+                    Insert your task here: *{" "}
                   </Label.Root>
+                  {data?.validationErrors?.answerFieldError ? (
+                    <em>
+                      <Text color="red" as="p">
+                        {data?.validationErrors?.answerFieldError}
+                      </Text>
+                    </em>
+                  ) : null}
                   <TextArea
                     id="task"
                     name="task"
@@ -129,6 +159,13 @@ export default function Index() {
                   <Label.Root htmlFor="answer">
                     Insert your response here: *
                   </Label.Root>
+                  {data?.validationErrors?.taskFieldError ? (
+                    <em>
+                      <Text color="red" as="p">
+                        {data?.validationErrors?.taskFieldError}
+                      </Text>
+                    </em>
+                  ) : null}
                   <TextArea
                     id="answer"
                     name="answer"
@@ -140,6 +177,13 @@ export default function Index() {
                     spellCheck="false"
                     required
                   />
+                  {data?.validationErrors?.formError ? (
+                    <em>
+                      <Text color="red" as="p">
+                        {data?.validationErrors?.formError}
+                      </Text>
+                    </em>
+                  ) : null}
                   <Flex justify="end">
                     <Button loading={isAdding} mt="4" variant="solid">
                       Get AI report
