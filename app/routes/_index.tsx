@@ -22,6 +22,7 @@ import styles from "~/styles/index.css?url";
 import { useEffect, useRef } from "react";
 import OpenAI from "openai";
 import { typedjson } from "remix-typedjson";
+import ReactMarkdown from "react-markdown";
 
 export const meta: MetaFunction = () => {
   return [
@@ -236,7 +237,7 @@ export default function Index() {
                   improvements in grammatical accuracy and clarity of expression
                   could elevate the essay to a higher band score. This essay
                   would likely score around Band 6. */}
-                    {`Here is your AI report: ${data.result}`}
+                    <ReactMarkdown>{data.result}</ReactMarkdown>
                   </Text>
                 </Box>
                 <Box
@@ -253,7 +254,8 @@ export default function Index() {
                       Others argue that this support should come from other
                       sources, such as private or corporate funding. Discuss
                       both views and give your opinion. */}
-                        {`Task: ${data.task}`}
+                        <b>Task</b>
+                        {`: ${data.task}`}
                       </Text>
                     </Box>
                     <Box>
@@ -267,7 +269,8 @@ export default function Index() {
                       corporations. In my opinion, if the creative people has
                       financial support from both places, they have more options
                       to choose from. */}
-                        {`Response: ${data.answer}`}
+                        <b>Response</b>
+                        {`: ${data.answer}`}
                       </Text>
                     </Box>
                   </Flex>

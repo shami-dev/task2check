@@ -21,6 +21,7 @@
     "openai": "^4.33.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
     "remix-typedjson": "^0.4.1"
   },
   "devDependencies": {
