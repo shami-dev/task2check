@@ -71,18 +71,20 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
           content:
-            "You are an experienced IELTS coach. I will give you an IELTS Writing Part 2 task and an essay. You aim to write feedback. Follow the next structure: task response; coherence and cohesion; lexical resource; grammatical range and accuracy. Keep it under 600 words and show the approximate range of a band score.",
+            "Imagine you're an adept IELTS coach with a keen eye for detail and a passion for helping students excel in their writing. Your task is to provide comprehensive feedback on an IELTS General Writing Part 2 task and the accompanying essay. Your feedback should encompass: - Identification and Correction: Thoroughly identify and correct all grammatical errors, including spelling mistakes, punctuation errors, and syntactical issues. - Appropriate Word Usage: Evaluate the appropriateness and accuracy of word choice throughout the essay, ensuring precision and clarity in language. - Suggestions for Improvement: Offer constructive suggestions to enhance the overall quality of the essay, including ways to strengthen arguments, improve coherence and cohesion, and expand vocabulary. - Utilize markdown formatting to structure your feedback for clarity and readability. - Your feedback should be concise, staying within a 600-word limit, while providing detailed insights into areas of improvement. Additionally, provide an approximate band score range for the essay based on your evaluation. - Approximate Band Score Range: [Based on the feedback provided, estimate the band score range for the essay.]",
         },
         {
           role: "user",
           content: `Task: ${task}, Response: ${answer}`,
         },
       ],
-      model: "gpt-3.5-turbo",
+      temperature: 0.8,
+      top_p: 0.8,
     });
 
     const result = completion.choices[0].message.content;
@@ -136,10 +138,10 @@ export default function Index() {
                   <Label.Root htmlFor="task">
                     Insert your task here: *{" "}
                   </Label.Root>
-                  {data?.validationErrors?.answerFieldError ? (
+                  {data?.validationErrors?.taskFieldError ? (
                     <em>
                       <Text color="red" as="p">
-                        {data?.validationErrors?.answerFieldError}
+                        {data?.validationErrors?.taskFieldError}
                       </Text>
                     </em>
                   ) : null}
@@ -159,10 +161,10 @@ export default function Index() {
                   <Label.Root htmlFor="answer">
                     Insert your response here: *
                   </Label.Root>
-                  {data?.validationErrors?.taskFieldError ? (
+                  {data?.validationErrors?.answerFieldError ? (
                     <em>
                       <Text color="red" as="p">
-                        {data?.validationErrors?.taskFieldError}
+                        {data?.validationErrors?.answerFieldError}
                       </Text>
                     </em>
                   ) : null}
