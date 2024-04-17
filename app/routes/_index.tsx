@@ -85,6 +85,7 @@ export async function action({ request }: ActionFunctionArgs) {
         },
       ],
       temperature: 0.8,
+      max_tokens: 600,
       top_p: 0.8,
     });
 
