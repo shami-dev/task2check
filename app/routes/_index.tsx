@@ -19,7 +19,7 @@ import type {
 } from "@remix-run/node";
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import styles from "~/styles/index.css?url";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import OpenAI from "openai";
 import { typedjson } from "remix-typedjson";
 import ReactMarkdown from "react-markdown";
@@ -126,6 +126,22 @@ export default function Index() {
 
   const data = useActionData<typeof action>();
 
+  const [text, setText] = useState("");
+
+  function countWords() {
+    const wordCount = text
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word !== "").length;
+    return wordCount;
+  }
+
+  useEffect(() => {
+    if (isAdding && text !== "") {
+      setText("");
+    }
+  }, [isAdding, text]);
+
   return (
     <>
       <main>
@@ -151,8 +167,8 @@ export default function Index() {
                 <Box maxWidth="700px">
                   <Text as="p" mb="4">
                     <Strong>
-                      You should spend about 40 minutes on this task Write at
-                      least 250 words
+                      You should spend about 40 minutes on this task. Write at
+                      least 250 words.
                     </Strong>
                   </Text>
                   <Label.Root htmlFor="task">
@@ -198,7 +214,9 @@ export default function Index() {
                     resize="vertical"
                     spellCheck="false"
                     required
+                    onChange={(e) => setText(e.target.value)}
                   />
+                  <Text>Word count: {countWords()}</Text>
                   {data?.validationErrors?.formError ? (
                     <em>
                       <Text color="red" as="p">
