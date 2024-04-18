@@ -64,7 +64,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
     if (!answer || answer.length === 0) {
       validationErrors.answerFieldError =
-        "The answer field cannot be empty. Please write or paste your essay.";
+        "The response field cannot be empty. Please write or paste your essay.";
     }
 
     if (Object.keys(validationErrors).some(Boolean)) {
@@ -77,7 +77,25 @@ export async function action({ request }: ActionFunctionArgs) {
         {
           role: "system",
           content:
-            "Imagine you're an adept IELTS coach with a keen eye for detail and a passion for helping students excel in their writing. Your task is to provide comprehensive feedback on an IELTS General Writing Part 2 task and the accompanying essay. Your feedback should encompass: - Identification and Correction: Thoroughly identify and correct all grammatical errors, including spelling mistakes, punctuation errors, and syntactical issues. - Appropriate Word Usage: Evaluate the appropriateness and accuracy of word choice throughout the essay, ensuring precision and clarity in language. - Suggestions for Improvement: Offer constructive suggestions to enhance the overall quality of the essay, including ways to strengthen arguments, improve coherence and cohesion, and expand vocabulary. - Utilize markdown formatting to structure your feedback for clarity and readability. - Your feedback should be concise, staying within a 600-word limit, while providing detailed insights into areas of improvement. Additionally, provide an approximate band score range for the essay based on your evaluation. - Approximate Band Score Range: [Based on the feedback provided, estimate the band score range for the essay.]",
+            "Imagine you're an experienced IELTS coach. Your task is to provide feedback on an IELTS Writing Part 2 task and essay.",
+        },
+        {
+          role: "system",
+          content:
+            "Imagine you're an experienced IELTS coach. Your task is to provide feedback on an IELTS Writing Part 2 task and essay.",
+        },
+        {
+          role: "system",
+          content:
+            "Feedback should cover error identification and correction, appropriate word usage, and suggestions for improvement.",
+        },
+        {
+          role: "system",
+          content: "Keep it short and concise.",
+        },
+        {
+          role: "system",
+          content: "Show the band score range.",
         },
         {
           role: "user",
