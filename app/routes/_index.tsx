@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import {
   Box,
   Button,
@@ -19,7 +18,7 @@ import type {
 } from "@remix-run/node";
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import styles from "~/styles/index.css?url";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import OpenAI from "openai";
 import { typedjson } from "remix-typedjson";
 import ReactMarkdown from "react-markdown";
@@ -117,14 +116,26 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Index() {
   const navigation = useNavigation();
-  const formRef = useRef<HTMLFormElement>(null);
   const isAdding = navigation.state === "submitting";
 
   useEffect(() => {
-    if (!isAdding) formRef.current!.reset(), setText("");
+    if (!isAdding) setText("");
   }, [isAdding]);
 
   const data = useActionData<typeof action>();
+
+  // const data = {
+  //   result:
+  //     "Coherence and cohesion: The essay is generally well-structured with an introduction, body paragraphs discussing each viewpoint, and a clear opinion stated in the conclusion. The writer uses transition words like 'however,' 'otherwise,' and 'as a consequence' to link ideas within and between sentences. However, there are some issues with clarity in some sentences, such as 'It can be less risk-taking in comparison with private support,' which could be rephrased for better coherence. Overall, the essay demonstrates a good level of coherence and cohesion but could benefit from further clarity. Lexical resource: The writer demonstrates a wide range of vocabulary by using varied terms such as 'prosperity,' 'bureaucracy,' 'self-development,' and 'imbalance.' Some less common and more sophisticated vocabulary choices, such as 'monetary backing' instead of 'financial support,' could enhance the essay's lexical resource further. However, there are instances of awkward or unclear phrasing, such as 'I tend to thing that the combined funding are more valuable,' which affects the overall lexical resource score. Grammatical range and accuracy: The writer shows a good range of grammatical structures, including complex sentences and conditional clauses. Some errors in subject-verb agreement ('the creative crowd will have many more choices') and word choice ('thing' instead of 'think') are present. Additionally, there are a few instances of awkward phrasing that affect clarity, such as 'When companies' offer a great support, authorities can delegate this duty.' Overall, the essay demonstrates a good command of grammar but would benefit from more accuracy and precision in expression. Overall, this essay demonstrates a sufficient level of English proficiency for IELTS Writing Task 2, particularly in coherence and cohesion and lexical resource. However, improvements in grammatical accuracy and clarity of expression could elevate the essay to a higher band score. This essay would likely score around Band 6.",
+  //   task: "Some people believe that the government should provide financial assistance to musicians, artists, and other creative individuals to encourage cultural growth. Others argue that this support should come from other sources, such as private or corporate funding. Discuss both views and give your opinion.",
+  //   answer:
+  //     "There are no doubts that the amount of support given to a cultural sector is correlated with the cultural prosperity of a society as well as the sources of its support. Some people say that the talented people should be supported by government, and others consider that fundings should be received from companies and corporations. In my opinion, if the creative people has financial support from both places, they have more options to choose from.",
+  //   validationErrors: {
+  //     taskFieldError: undefined,
+  //     answerFieldError: undefined,
+  //     formError: undefined,
+  //   },
+  // };
 
   const [text, setText] = useState("");
 
@@ -140,19 +151,23 @@ export default function Index() {
     <>
       <main>
         <Section px="4">
-          <Heading
-            as="h1"
-            align="center"
-            size="7"
-            weight="bold"
-            wrap="pretty"
-            color="blue"
-            mb="8"
-          >
-            Welcome to the IELTS Writing Part-2 AI Checker!
-          </Heading>
-          <Container maxWidth="1024px">
-            <Form ref={formRef} method="post">
+          <Link to="/" className="link">
+            <Heading
+              as="h1"
+              align="center"
+              size="7"
+              weight="bold"
+              wrap="pretty"
+              color="blue"
+              mb="8"
+            >
+              Welcome to the IELTS Writing Part-2 AI Checker!
+            </Heading>
+          </Link>
+          {data?.result?.length > 0 ? (
+            ""
+          ) : (
+            <Form method="post">
               <Flex
                 justify="between"
                 direction={{ initial: "column", sm: "row" }}
@@ -226,89 +241,39 @@ export default function Index() {
                 </Box>
               </Flex>
             </Form>
-            {data?.result && (
-              <Flex direction={{ initial: "column", sm: "row" }} mt="8" gap="4">
-                <Box
-                  className="response-box"
-                  width={{ initial: "100%", sm: "60%" }}
-                  p="4"
-                >
-                  <Text as="p">
-                    {/* Coherence and cohesion: The essay is generally well-structured
-                  with an introduction, body paragraphs discussing each
-                  viewpoint, and a clear opinion stated in the conclusion. The
-                  writer uses transition words like "however," "otherwise," and
-                  "as a consequence" to link ideas within and between sentences.
-                  However, there are some issues with clarity in some sentences,
-                  such as "It can be less risk-taking in comparison with private
-                  support," which could be rephrased for better coherence.
-                  Overall, the essay demonstrates a good level of coherence and
-                  cohesion but could benefit from further clarity. Lexical
-                  resource: The writer demonstrates a wide range of vocabulary
-                  by using varied terms such as "prosperity," "bureaucracy,"
-                  "self-development," and "imbalance." Some less common and more
-                  sophisticated vocabulary choices, such as "monetary backing"
-                  instead of "financial support," could enhance the essay's
-                  lexical resource further. However, there are instances of
-                  awkward or unclear phrasing, such as "I tend to thing that the
-                  combined funding are more valuable," which affects the overall
-                  lexical resource score. Grammatical range and accuracy: The
-                  writer shows a good range of grammatical structures, including
-                  complex sentences and conditional clauses. Some errors in
-                  subject-verb agreement ("the creative crowd will have many
-                  more choices") and word choice ("thing" instead of "think")
-                  are present. Additionally, there are a few instances of
-                  awkward phrasing that affect clarity, such as "When companies'
-                  offer a great support, authorities can delegate this duty."
-                  Overall, the essay demonstrates a good command of grammar but
-                  would benefit from more accuracy and precision in expression.
-                  Overall, this essay demonstrates a sufficient level of English
-                  proficiency for IELTS Writing Task 2, particularly in
-                  coherence and cohesion and lexical resource. However,
-                  improvements in grammatical accuracy and clarity of expression
-                  could elevate the essay to a higher band score. This essay
-                  would likely score around Band 6. */}
-                    <ReactMarkdown>{data.result}</ReactMarkdown>
-                  </Text>
-                </Box>
-                <Box
-                  className="task-box"
-                  width={{ initial: "100%", sm: "40%" }}
-                  p="4"
-                >
-                  <Flex direction="column">
-                    <Box>
-                      <Text as="p">
-                        {/* Task: Some people believe that the government should
-                      provide financial assistance to musicians, artists, and
-                      other creative individuals to encourage cultural growth.
-                      Others argue that this support should come from other
-                      sources, such as private or corporate funding. Discuss
-                      both views and give your opinion. */}
-                        <b>Task</b>
-                        {`: ${data.task}`}
-                      </Text>
-                    </Box>
-                    <Box>
-                      <Text as="p">
-                        {/* Response: There are no doubts that the amount of support
-                      given to a cultural sector is correlated with the cultural
-                      prosperity of a society as well as the sources of its
-                      support. Some people say that the talented people should
-                      be supported by government, and others consider that
-                      fundings should be received from companies and
-                      corporations. In my opinion, if the creative people has
-                      financial support from both places, they have more options
-                      to choose from. */}
-                        <b>Response</b>
-                        {`: ${data.answer}`}
-                      </Text>
-                    </Box>
-                  </Flex>
-                </Box>
-              </Flex>
-            )}
-          </Container>
+          )}
+
+          {data?.result && (
+            <Flex direction={{ initial: "column", sm: "row" }} mt="8" gap="4">
+              <Box
+                className="response-box"
+                width={{ initial: "100%", sm: "60%" }}
+                px="4"
+              >
+                <ReactMarkdown>{data.result}</ReactMarkdown>
+              </Box>
+              <Box
+                className="task-box"
+                width={{ initial: "100%", sm: "40%" }}
+                p="4"
+              >
+                <Flex direction="column">
+                  <Box>
+                    <Text as="p">
+                      <b>Task</b>
+                      {`: ${data.task}`}
+                    </Text>
+                  </Box>
+                  <Box>
+                    <Text as="p">
+                      <b>Response</b>
+                      {`: ${data.answer}`}
+                    </Text>
+                  </Box>
+                </Flex>
+              </Box>
+            </Flex>
+          )}
         </Section>
       </main>
       <Section mx="4">

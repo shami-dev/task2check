@@ -6,7 +6,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import "@radix-ui/themes/styles.css";
-import { Theme } from "@radix-ui/themes";
+import { Container, Theme } from "@radix-ui/themes";
 import { Analytics } from "@vercel/analytics/react";
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -20,7 +20,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <Theme accentColor="blue" scaling="100%">
-          {children}
+          <Container maxWidth="1024px">{children}</Container>
           <Analytics />
         </Theme>
         <ScrollRestoration />
