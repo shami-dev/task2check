@@ -121,7 +121,7 @@ export default function Index() {
   const isAdding = navigation.state === "submitting";
 
   useEffect(() => {
-    if (!isAdding) formRef.current!.reset();
+    if (!isAdding) formRef.current!.reset(), setText("");
   }, [isAdding]);
 
   const data = useActionData<typeof action>();
@@ -135,12 +135,6 @@ export default function Index() {
       .filter((word) => word !== "").length;
     return wordCount;
   }
-
-  useEffect(() => {
-    if (isAdding && text !== "") {
-      setText("");
-    }
-  }, [isAdding, text]);
 
   return (
     <>
