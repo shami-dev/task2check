@@ -17,7 +17,8 @@ import type {
   ActionFunctionArgs,
 } from "@remix-run/node";
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
-import styles from "~/styles/index.css?url";
+import sharedStyles from "~/styles/shared.css?url";
+import indexStyles from "~/styles/index.css?url";
 import { useEffect, useState } from "react";
 import OpenAI from "openai";
 import { typedjson } from "remix-typedjson";
@@ -33,7 +34,10 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: indexStyles },
+  { rel: "stylesheet", href: sharedStyles },
+];
 
 export async function action({ request }: ActionFunctionArgs) {
   try {

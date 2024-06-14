@@ -9,18 +9,6 @@ form {
   font-size: inherit;
 }
 
-.link {
-  color: var(--accent-a11);
-  text-decoration: none;
-}
-
-.link:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--gray-a6);
-  text-decoration-thickness: min(2px, max(1px, 0.05em));
-  text-underline-offset: calc(0.025em + 2px);
-}
-
 .response-box {
   background-color: var(--accent-2);
   border: double;
