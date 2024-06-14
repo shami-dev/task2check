@@ -9,6 +9,10 @@ import "@radix-ui/themes/styles.css";
 import { Container, Theme } from "@radix-ui/themes";
 import { Analytics } from "@vercel/analytics/react";
 
+export const config = {
+  maxDuration: 30,
+};
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
