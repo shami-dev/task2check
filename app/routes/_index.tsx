@@ -74,39 +74,49 @@ export async function action({ request }: ActionFunctionArgs) {
       return typedjson({ validationErrors }, { status: 400 });
     }
 
+    const band9EssayExample = `Social networking sites, for instance Facebook, are thought by some to have had a detrimental effect on individual people as well as society and local communities. However, while I believe that such sites are mainly beneficial to the individual, I agree that they have had a damaging effect on local communities.
+
+    With regards to individuals, the impact that online social media has had on each individual person has clear advantages. Firstly, people from different countries are brought together through such sites as Facebook whereas before the development of technology and social networking sites, people rarely had the chance to meet or communicate with anyone outside of their immediate circle or community. Secondly, Facebook also has social groups which offer individuals a chance to meet and participate in discussions with people who share common interests.
+
+    On the other hand, the effect that Facebook and other social networking sites have had on societies and local communities can only be seen as negative. Rather than individual people taking part in their local community, they are instead choosing to take more interest in people online. Consequently, the people within local communities are no longer forming close or supportive relationships. Furthermore, society as a whole is becoming increasingly disjointed and fragmented as people spend more time online with people they have never met face to face and who they are unlikely to ever meet in the future.
+
+    To conclude, although social networking sites have brought individuals closer together, they have not had the same effect on society or local communities. Local communities should do more to try and involve local people in local activities in order to promote the future of community life.`;
+
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content:
-            "Imagine you're an experienced IELTS coach. Your task is to provide feedback on an IELTS Writing Part 2 task and essay.",
-        },
-        {
-          role: "system",
-          content:
-            "Imagine you're an experienced IELTS coach. Your task is to provide feedback on an IELTS Writing Part 2 task and essay.",
-        },
-        {
-          role: "system",
-          content:
-            "Feedback should cover error identification and correction, appropriate word usage, and suggestions for improvement.",
-        },
-        {
-          role: "system",
-          content: "Keep it short and concise.",
-        },
-        {
-          role: "system",
-          content: "Show the band score range.",
-        },
-        {
-          role: "user",
-          content: `Task: ${task}, Response: ${answer}`,
+          content: `You are an IELTS examiner. Provide practical feedback and band scores for the following IELTS Writing Task 2 essay.
+          Essay Task: ${task}
+          Band 9 Essay Example: ${band9EssayExample}
+          Essay: ${answer}
+          Feedback Instructions:
+          1. Task Response (Band 1-9):
+          - Evaluate how well the candidate addresses all parts of the task.
+          - Consider whether the candidate's position is clear and well-supported with relevant examples.
+          - Provide specific examples from the essay to justify the score.
+          2. Coherence and Cohesion (Band 1-9):
+          - Assess the logical organization of ideas and how well paragraphs and sentences are connected.
+          - Look at the use of cohesive devices and transitions.
+          - Point out any areas where the essay could be better organized or more cohesive.
+          3. Lexical Resource (Band 1-9):
+          - Evaluate the range of vocabulary used and the accuracy of word choice.
+          - Note any instances of inappropriate or repetitive vocabulary.
+          - Suggest synonyms or more precise word choices where necessary.
+          4. Grammatical Range and Accuracy (Band 1-9):
+          - Assess the range and accuracy of grammatical structures used.
+          - Identify specific grammatical errors and suggest corrections.
+          - Highlight any particularly complex or well-used structures.
+          Band Score Calculation:
+          - Provide a band score for each criterion (Task Response, Coherence and Cohesion, Lexical Resource, Grammatical Range and Accuracy).
+          - Calculate an overall band score by averaging the four individual scores.
+
+          Please provide detailed and concrete feedback based on the above instructions.`,
         },
       ],
       temperature: 0.8,
-      max_tokens: 600,
+      max_tokens: 1500,
       top_p: 0.8,
     });
 
